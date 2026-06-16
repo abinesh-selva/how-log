@@ -1,92 +1,54 @@
-"use client";
+import type { Metadata } from "next"
+import { ToolPageWrapper } from "@/components/shared/ToolPageWrapper"
+import { FAQSection } from "@/components/shared/FAQSection"
+import { DaysBetweenClient } from "./DaysBetweenClient"
+import { buildFAQSchema, buildHowToSchema } from "@/lib/schema/jsonld"
+import { JsonLd } from "@/components/shared/JsonLd"
 
-import { useState } from "react";
-import { calculateDaysBetween, formatNumber } from "@/lib/date-utils";
+export const metadata: Metadata = {
+  title: "Days Between Dates Calculator — Count Days, Weeks & Months",
+  description:
+    "Calculate the exact number of days, weeks, months, and years between any two dates. Free, instant, and accurate.",
+}
+
+const FAQS = [
+  {
+    question: "How do I calculate the days between two dates?",
+    answer: "Enter a start date and an end date, then click Calculate. The result shows the exact number of calendar days, weeks, months, and years between the two dates.",
+  },
+  {
+    question: "Does the calculator include both the start and end date?",
+    answer: "The calculator counts the number of days from the start date up to (but not including) the end date. To include both dates, add 1 to the result.",
+  },
+  {
+    question: "Can I calculate days between dates in the past?",
+    answer: "Yes — enter any two dates, past or future. The calculator works for any dates between the years 1 and 9999.",
+  },
+  {
+    question: "How many weeks are between two dates?",
+    answer: "Divide the total days by 7. The calculator shows this automatically, including the remaining days after whole weeks.",
+  },
+]
+
+const HOW_TO = [
+  { name: "Enter the start date", text: "Select or type your start date in the Start Date field." },
+  { name: "Enter the end date", text: "Select or type your end date in the End Date field." },
+  { name: "Click Calculate", text: "Press the Calculate button to see the exact difference in days, weeks, months, and years." },
+]
 
 export default function DaysBetweenPage() {
-    const [date1, setDate1] = useState("");
-    const [date2, setDate2] = useState("");
-    const [result, setResult] = useState<ReturnType<typeof calculateDaysBetween> | null>(null);
-
-    const handleCalculate = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!date1 || !date2) return;
-        const d1 = new Date(date1);
-        const d2 = new Date(date2);
-        if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return;
-        setResult(calculateDaysBetween(d1, d2));
-    };
-
-    return (
-        <div className="container">
-            <div className="tool-page">
-                <h1 className="animate-fade-in-up">
-                    <span className="gradient-text">Days Between</span> Calculator
-                </h1>
-                <p className="tool-page-desc animate-fade-in-up stagger-1">
-                    Calculate the exact number of days, weeks, months, and years between any two dates.
-                </p>
-
-                <form onSubmit={handleCalculate} className="tool-form glass-card animate-fade-in-up stagger-2">
-                    <div className="tool-form-row">
-                        <label htmlFor="date1">Start Date</label>
-                        <input
-                            id="date1"
-                            type="date"
-                            value={date1}
-                            onChange={(e) => setDate1(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="tool-form-row">
-                        <label htmlFor="date2">End Date</label>
-                        <input
-                            id="date2"
-                            type="date"
-                            value={date2}
-                            onChange={(e) => setDate2(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="btn btn-primary btn-lg" style={{ alignSelf: "center" }}>
-                        Calculate Days →
-                    </button>
-                </form>
-
-                {result && (
-                    <div className="tool-result glass-card animate-fade-in-up">
-                        <div className="tool-result-value gradient-text">{formatNumber(result.days)}</div>
-                        <div className="tool-result-label">days between these dates</div>
-
-                        <div className="breakdown-grid" style={{ marginTop: "var(--space-xl)" }}>
-                            <div className="breakdown-card glass-card">
-                                <div className="breakdown-value">{formatNumber(result.years)}</div>
-                                <div className="breakdown-label">Years</div>
-                            </div>
-                            <div className="breakdown-card glass-card">
-                                <div className="breakdown-value">{formatNumber(result.months)}</div>
-                                <div className="breakdown-label">Months</div>
-                            </div>
-                            <div className="breakdown-card glass-card">
-                                <div className="breakdown-value">{formatNumber(result.weeks)}</div>
-                                <div className="breakdown-label">Weeks</div>
-                            </div>
-                            <div className="breakdown-card glass-card">
-                                <div className="breakdown-value">{formatNumber(result.days)}</div>
-                                <div className="breakdown-label">Days</div>
-                            </div>
-                            <div className="breakdown-card glass-card">
-                                <div className="breakdown-value">{formatNumber(result.hours)}</div>
-                                <div className="breakdown-label">Hours</div>
-                            </div>
-                            <div className="breakdown-card glass-card">
-                                <div className="breakdown-value">{formatNumber(result.businessDays)}</div>
-                                <div className="breakdown-label">Business Days</div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
+  return (
+    <>
+      <JsonLd data={buildFAQSchema(FAQS)} />
+      <JsonLd data={buildHowToSchema("Calculate Days Between Dates", "Find the exact number of days between any two dates.", HOW_TO)} />
+      <ToolPageWrapper
+        title="Days Between Dates"
+        description="Calculate the exact number of days, weeks, months, and years between any two dates."
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Tools" }, { label: "Days Between Dates" }]}
+      >
+        <DaysBetweenClient />
+        <FAQSection faqs={FAQS} />
+      </ToolPageWrapper>
+    </>
+  )
 }

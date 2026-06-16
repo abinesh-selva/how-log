@@ -1,57 +1,88 @@
-import Link from "next/link";
+import Link from "next/link"
 
-export default function Footer() {
-    return (
-        <footer className="footer">
-            <div className="container">
-                <div className="footer-grid">
-                    <div className="footer-brand">
-                        <div className="logo">
-                            <span className="logo-icon">⏱</span>
-                            <span>How-Log</span>
-                        </div>
-                        <p>
-                            The fastest, most beautiful way to calculate time. Know your dates,
-                            share your milestones, track your moments.
-                        </p>
-                    </div>
+const TOOLS = [
+  { label: "Age Calculator",   href: "/tools/age" },
+  { label: "Days Between",     href: "/tools/days-between" },
+  { label: "Business Days",    href: "/tools/business-days" },
+  { label: "Day of the Week",  href: "/tools/day-of-week" },
+  { label: "Date Calculator",  href: "/tools/date-calculator" },
+]
 
-                    <div>
-                        <h4 className="footer-heading">Tools</h4>
-                        <ul className="footer-links">
-                            <li><Link href="/tools/days-between">Days Between</Link></li>
-                            <li><Link href="/tools/day-of-week">Day of Week</Link></li>
-                            <li><Link href="/tools/age-calculator">Age Calculator</Link></li>
-                            <li><Link href="/tools/business-days">Business Days</Link></li>
-                        </ul>
-                    </div>
+const POPULAR = [
+  { label: "How long ago was 2000?",  href: "/date/2000" },
+  { label: "How long ago was 1990?",  href: "/date/1990" },
+  { label: "How long until Christmas?", href: "/date/december/25" },
+  { label: "How long until New Year?",  href: "/date/january/1" },
+  { label: "100 days from today",      href: "/days-from-today/100" },
+  { label: "30 days from today",       href: "/days-from-today/30" },
+]
 
-                    <div>
-                        <h4 className="footer-heading">Popular</h4>
-                        <ul className="footer-links">
-                            <li><Link href="/date/2000/january/1">Y2K — Jan 1, 2000</Link></li>
-                            <li><Link href="/date/2001/september/11">9/11 — Sep 11, 2001</Link></li>
-                            <li><Link href="/date/1969/july/20">Moon Landing</Link></li>
-                            <li><Link href="/date/1990/january/1">Start of the 90s</Link></li>
-                        </ul>
-                    </div>
+export function Footer() {
+  const year = new Date().getFullYear()
 
-                    <div>
-                        <h4 className="footer-heading">Company</h4>
-                        <ul className="footer-links">
-                            <li><Link href="/about">About</Link></li>
-                            <li><Link href="/privacy">Privacy Policy</Link></li>
-                            <li><Link href="/terms">Terms of Use</Link></li>
-                            <li><Link href="/contact">Contact</Link></li>
-                        </ul>
-                    </div>
-                </div>
+  return (
+    <footer className="bg-[var(--teal)] text-white/60">
+      <div className="max-w-6xl mx-auto px-5 pt-16 pb-10">
 
-                <div className="footer-bottom">
-                    <span>© {new Date().getFullYear()} How-Log. Built with ♥</span>
-                    <span>Know your time — beautifully.</span>
-                </div>
+        {/* CTA strip */}
+        <div className="bg-[var(--coral)] rounded-3xl px-8 py-8 mb-14 flex flex-col sm:flex-row items-center justify-between gap-5">
+          <div>
+            <p className="text-white font-bold text-xl">Start your countdown today</p>
+            <p className="text-white/80 text-sm mt-1">Create a shareable countdown to any moment that matters.</p>
+          </div>
+          <Link
+            href="/countdown/create"
+            className="flex-shrink-0 px-6 py-3 bg-white text-[var(--coral)] font-bold text-sm rounded-2xl hover:bg-[var(--cream)] transition-colors"
+          >
+            Create Free Countdown →
+          </Link>
+        </div>
+
+        {/* Links */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-12">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-full bg-[var(--coral)] flex items-center justify-center text-white text-xs font-bold">T</div>
+              <span className="text-white font-bold text-base">HowLongToGo</span>
             </div>
-        </footer>
-    );
+            <p className="text-sm leading-relaxed max-w-xs">
+              Free date calculators, live countdowns, and time tools for every occasion.
+            </p>
+          </div>
+
+          <div>
+            <p className="text-white text-xs font-bold uppercase tracking-[0.15em] mb-4">Tools</p>
+            <ul className="space-y-2.5">
+              {TOOLS.map((t) => (
+                <li key={t.href}>
+                  <Link href={t.href} className="text-sm hover:text-white transition-colors">{t.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-white text-xs font-bold uppercase tracking-[0.15em] mb-4">Popular</p>
+            <ul className="space-y-2.5">
+              {POPULAR.map((d) => (
+                <li key={d.href}>
+                  <Link href={d.href} className="text-sm hover:text-white transition-colors">{d.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs">
+          <p>© {year} HowLongToGo. All rights reserved.</p>
+          <div className="flex gap-5">
+            <Link href="/about" className="hover:text-white transition-colors">About</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
 }

@@ -1,64 +1,39 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "./globals.css"
+import { Header } from "@/components/layout/Header"
+import { Footer } from "@/components/layout/Footer"
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://how-log.com"),
   title: {
-    default: "How-Log — Know Your Time, Beautifully",
-    template: "%s | How-Log",
+    default: "HowLongToGo — Date Calculators & Countdown Tools",
+    template: "%s | HowLongToGo",
   },
   description:
-    "The fastest, most beautiful date calculator on the internet. Find how long ago any date was, calculate days between dates, and create stunning countdowns.",
-  keywords: [
-    "how long ago",
-    "date calculator",
-    "days between dates",
-    "countdown timer",
-    "day of the week",
-    "age calculator",
-    "time calculator",
-  ],
+    "Free date calculators, live countdowns, and time tools. Find out how long ago any date was, how long until any event, calculate your exact age, business days, and more.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? "https://howlongtogo.com"),
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "How-Log",
-    title: "How-Log — Know Your Time, Beautifully",
-    description: "The fastest, most beautiful date calculator on the internet.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "How-Log — Know Your Time, Beautifully",
-    description: "The fastest, most beautiful date calculator on the internet.",
+    siteName: "HowLongToGo",
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-};
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body>
-        <ThemeProvider>
-          <Header />
-          <main style={{ position: "relative", zIndex: 1 }}>{children}</main>
-          <Footer />
-        </ThemeProvider>
+    <html lang="en" className={inter.variable}>
+      <body className="min-h-screen bg-white font-sans antialiased flex flex-col">
+        <Header />
+        <div className="flex-1">{children}</div>
+        <Footer />
       </body>
     </html>
-  );
+  )
 }
