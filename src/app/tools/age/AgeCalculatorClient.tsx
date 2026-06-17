@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button"
 import { StatGrid } from "@/components/shared/StatGrid"
 import { ResultCard } from "@/components/shared/ResultCard"
 import type { AgeResult } from "@/types"
+import { getZodiacSign, getZodiacEmoji } from "@/lib/date/zodiac"
 
 const EMPTY = { day: "", month: "", year: "" }
 
@@ -64,7 +65,13 @@ export function AgeCalculatorClient() {
     { label: "Days",   value: result.totalDays                               },
   ] : []
 
+  const birthDay = parseInt(dob.day, 10)
+  const birthMonth = parseInt(dob.month, 10)
+  const zodiac = birthDay && birthMonth ? getZodiacSign(birthDay, birthMonth) : ""
+  const zodiacEmoji = zodiac ? getZodiacEmoji(zodiac) : ""
+
   const lifeStats = result ? [
+    { label: "Zodiac Sign",      value: `${zodiac} ${zodiacEmoji}`                   },
     { label: "Heartbeats",       value: result.lifeStats.heartbeats.toLocaleString() },
     { label: "Breaths",          value: result.lifeStats.breaths.toLocaleString()    },
     { label: "Hours Slept",      value: result.lifeStats.sleepHours.toLocaleString() },

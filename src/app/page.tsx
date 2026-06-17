@@ -54,8 +54,9 @@ const TRENDING = [
 export default function Home() {
   // Server-side real numbers — updated every revalidate cycle
   const now = new Date()
-  const daysSince2000 = Math.floor(
-    (now.getTime() - new Date(2000, 0, 1).getTime()) / 86400000
+  const currentYear = now.getFullYear()
+  const daysSinceStartOfYear = Math.floor(
+    (now.getTime() - new Date(currentYear, 0, 1).getTime()) / 86400000
   )
   const xmas = new Date(now.getFullYear(), 11, 25)
   if (xmas < now) xmas.setFullYear(xmas.getFullYear() + 1)
@@ -131,9 +132,9 @@ export default function Home() {
                 {/* Main card */}
                 <div className="absolute inset-x-0 top-6 bg-white/8 border border-white/12 backdrop-blur-sm rounded-3xl p-8 text-center"
                   style={{ background: "rgba(255,255,255,0.07)" }}>
-                  <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Days since Jan 1, 2000</p>
+                  <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Days since Jan 1, {currentYear}</p>
                   <p className="text-8xl font-black text-white tabular-nums leading-none">
-                    {daysSince2000.toLocaleString()}
+                    {daysSinceStartOfYear.toLocaleString()}
                   </p>
                   <p className="text-white/25 text-xs mt-4">Updated hourly · try the calculator below</p>
                   <div className="mt-5 flex justify-center gap-2">

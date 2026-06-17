@@ -61,6 +61,8 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null)
   const [isShared, setIsShared] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
+  const [showEmbed, setShowEmbed] = useState(false)
+  const [isCopiedEmbed, setIsCopiedEmbed] = useState(false)
 
   useEffect(() => {
     setTimeLeft(calcTimeLeft(targetDate))
@@ -136,6 +138,18 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
     }
   }
 
+  function copyEmbedCode() {
+    const code = `<iframe src="${typeof window !== 'undefined' ? window.location.origin : ''}/embed/${targetDate.replace(/[^a-zA-Z0-9-]/g, "")}" width="100%" height="400" frameborder="0" style="border-radius: 16px;"></iframe>`
+    // We don't actually use targetDate here, we need the token from the URL!
+    const token = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() : ''
+    const realCode = `<iframe src="${typeof window !== 'undefined' ? window.location.origin : 'https://howlongtogo.com'}/embed/${token}" width="100%" height="350" frameborder="0" style="border-radius: 16px; border: none; max-width: 400px;"></iframe>`
+    
+    navigator.clipboard.writeText(realCode).then(() => {
+      setIsCopiedEmbed(true)
+      setTimeout(() => setIsCopiedEmbed(false), 2000)
+    })
+  }
+
   return (
     <div className="min-h-[calc(100vh-8rem)] relative overflow-hidden flex items-center justify-center bg-slate-900 px-4 py-12">
       <VantaFog color={hexColor} baseColor={0x0f172a} opacity={1} />
@@ -195,6 +209,12 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
               </>
             ) : "Save 5s Story Video"}
           </button>
+          <button
+            onClick={() => setShowEmbed(true)}
+            className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors backdrop-blur min-w-[160px]"
+          >
+            Embed Widget
+          </button>
           <Link
             href="/countdown/create"
             className="px-6 py-3 bg-white text-slate-900 hover:bg-white/90 rounded-xl text-sm font-medium transition-colors"
@@ -202,6 +222,33 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
             Create Your Own
           </Link>
         </div>
+
+        {/* Embed Modal */}
+        {showEmbed && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowEmbed(false)}>
+            <div className="bg-white rounded-2xl p-6 md:p-8 max-w-lg w-full text-left shadow-2xl relative" onClick={e => e.stopPropagation()}>
+              <button 
+                onClick={() => setShowEmbed(false)}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500"
+              >
+                ✕
+              </button>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Embed this Countdown</h3>
+              <p className="text-sm text-slate-600 mb-6">
+                Copy and paste this HTML code to embed this exact countdown on your own website, blog, or Notion page.
+              </p>
+              <div className="bg-slate-900 rounded-xl p-4 font-mono text-xs text-emerald-400 overflow-x-auto mb-4 border border-slate-800">
+                {`<iframe src="${typeof window !== 'undefined' ? window.location.origin : 'https://howlongtogo.com'}/embed/${typeof window !== 'undefined' ? window.location.pathname.split('/').pop() : ''}" width="100%" height="350" frameborder="0" style="border-radius: 16px; border: none; max-width: 400px;"></iframe>`}
+              </div>
+              <button
+                onClick={copyEmbedCode}
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-colors"
+              >
+                {isCopiedEmbed ? "Copied to Clipboard!" : "Copy HTML Code"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

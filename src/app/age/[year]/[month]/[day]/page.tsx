@@ -3,6 +3,8 @@ import { notFound } from "next/navigation"
 import { buildFAQSchema, buildBreadcrumbSchema } from "@/lib/schema/jsonld"
 import { JsonLd } from "@/components/shared/JsonLd"
 import { StatGrid } from "@/components/shared/StatGrid"
+import { calculateAge } from "@/lib/date/calculations"
+import { getZodiacSign, getZodiacEmoji } from "@/lib/date/zodiac"
 
 interface Props {
   params: Promise<{ year: string; month: string; day: string }>
@@ -45,14 +47,10 @@ export default async function AgeProgrammaticPage({ params }: Props) {
   const now = new Date()
   if (birth > now) notFound()
 
-  let years = now.getFullYear() - birth.getFullYear()
-  let months = now.getMonth() - birth.getMonth()
-  let days = now.getDate() - birth.getDate()
-  if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate() }
-  if (months < 0) { years--; months += 12 }
-
-  const totalMs = now.getTime() - birth.getTime()
-  const totalDays = Math.floor(totalMs / 86400000)
+  const ageData = calculateAge(birth)
+  
+  const zodiac = getZodiacSign(d, m)
+  const zodiacEmoji = getZodiacEmoji(zodiac)
 
   const mName = MONTH_NAMES[m]
   const dateLabel = `${mName} ${d}, ${y}`
@@ -60,12 +58,16 @@ export default async function AgeProgrammaticPage({ params }: Props) {
   const faqs = [
     {
       question: `How old am I if I was born on ${dateLabel}?`,
-      answer: `If you were born on ${dateLabel}, you are ${years} years, ${months} months, and ${days} days old as of today.`,
+      answer: `If you were born on ${dateLabel}, you are ${ageData.years} years, ${ageData.months} months, and ${ageData.days} days old as of today.`,
     },
     {
       question: `How many days old am I if born ${dateLabel}?`,
-      answer: `You have been alive for ${totalDays.toLocaleString()} days.`,
+      answer: `You have been alive for ${ageData.totalDays.toLocaleString()} days.`,
     },
+    {
+      question: `What is my zodiac sign if I was born on ${dateLabel}?`,
+      answer: `Your zodiac sign is ${zodiac} ${zodiacEmoji}.`,
+    }
   ]
 
   const breadcrumbs = [
@@ -90,17 +92,38 @@ export default async function AgeProgrammaticPage({ params }: Props) {
         </h1>
         <p className="text-xl text-slate-600 mb-10">
           If you were born on <strong className="text-slate-900">{dateLabel}</strong>, you are{" "}
-          <strong className="text-slate-900">{years} years, {months} months, and {days} days</strong> old today.
+          <strong className="text-slate-900">{ageData.years} years, {ageData.months} months, and {ageData.days} days</strong> old today.
         </p>
 
         <StatGrid
           stats={[
-            { label: "Years", value: years, highlight: true },
-            { label: "Months", value: years * 12 + months },
-            { label: "Weeks", value: Math.floor(totalDays / 7) },
-            { label: "Days", value: totalDays },
+            { label: "Years", value: ageData.years, highlight: true },
+            { label: "Months", value: ageData.years * 12 + ageData.months },
+            { label: "Weeks", value: Math.floor(ageData.totalDays / 7) },
+            { label: "Days", value: ageData.totalDays },
           ]}
         />
+
+        <div className="mt-12 bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">Fascinating Life Stats</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-slate-50 p-6 rounded-xl text-center">
+              <div className="text-4xl mb-3">{zodiacEmoji}</div>
+              <div className="text-lg font-bold text-slate-900">{zodiac}</div>
+              <div className="text-sm text-slate-500 uppercase tracking-widest font-bold mt-1">Zodiac Sign</div>
+            </div>
+            <div className="bg-slate-50 p-6 rounded-xl text-center">
+              <div className="text-4xl mb-3">🌕</div>
+              <div className="text-lg font-bold text-slate-900">{ageData.lifeStats.fullMoons.toLocaleString()}</div>
+              <div className="text-sm text-slate-500 uppercase tracking-widest font-bold mt-1">Full Moons Seen</div>
+            </div>
+            <div className="bg-slate-50 p-6 rounded-xl text-center">
+              <div className="text-4xl mb-3">📅</div>
+              <div className="text-lg font-bold text-slate-900">{ageData.lifeStats.leapYears.toLocaleString()}</div>
+              <div className="text-sm text-slate-500 uppercase tracking-widest font-bold mt-1">Leap Years</div>
+            </div>
+          </div>
+        </div>
 
         <section className="mt-10 space-y-4">
           {faqs.map((faq) => (
