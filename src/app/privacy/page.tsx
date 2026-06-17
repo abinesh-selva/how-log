@@ -28,7 +28,7 @@ export default function PrivacyPage() {
     <main>
       {/* Header strip */}
       <div className="bg-[var(--teal)] py-14 px-5">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <nav className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.15em] text-white/50 mb-4">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>›</span>
@@ -39,7 +39,7 @@ export default function PrivacyPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-5 py-14 space-y-10">
+      <div className="max-w-6xl mx-auto px-5 py-14 space-y-10">
 
         <p className="text-[var(--ink-muted)] text-sm leading-relaxed p-5 rounded-2xl bg-[var(--cream)] border border-[#E8E3DC]">
           The short version: we don't sell your data, we don't require an account to use our
@@ -126,24 +126,14 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title="Contact">
+{/*        <Section title="Contact">
           <p>
             Questions about this policy:{" "}
             <a href="mailto:privacy@howlongtogo.app" className="text-[var(--coral)] hover:underline">
               privacy@howlongtogo.app
             </a>
           </p>
-        </Section>
-
-        <div className="flex gap-4 pt-4 border-t border-[#E8E3DC]">
-          <Link href="/terms" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--coral)] hover:underline">
-            Terms of Service <Arrow size={12} />
-          </Link>
-          <Link href="/about" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--ink-muted)] hover:text-[var(--ink)] hover:underline">
-            About us <Arrow size={12} />
-          </Link>
-        </div>
-
+        </Section>*/}
       </div>
     </main>
   )

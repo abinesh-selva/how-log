@@ -46,6 +46,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Enforce pointer cursor on all interactive elements */
+button, a, [role="button"] {
+  cursor: pointer;
+}
+
 /* ─── Custom Date Input — Split DD / MM / YYYY ──────────────── */
 .date-field {
   display: flex;
@@ -204,6 +209,22 @@ body {
 .delay-100    { animation-delay: 0.1s; }
 .delay-200    { animation-delay: 0.2s; }
 .delay-300    { animation-delay: 0.3s; }
+
+@keyframes emojiRain {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+.animate-emoji-rain { animation: emojiRain linear infinite; }
+
+@keyframes gradientBg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient-bg {
+  background-size: 200% 200%;
+  animation: gradientBg 15s ease infinite;
+}
 
 /* ─── Gradient text ─────────────────────────────────────────── */
 .text-gradient-coral {

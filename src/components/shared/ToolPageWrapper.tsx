@@ -36,7 +36,7 @@ export function ToolPageWrapper({
         <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-white opacity-[0.06]" />
         <div className="absolute right-24 bottom-0 w-32 h-32 rounded-full bg-white opacity-[0.04]" />
 
-        <div className="relative max-w-3xl mx-auto">
+        <div className="relative max-w-6xl mx-auto">
           {/* Breadcrumb */}
           {breadcrumbs && (
             <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/40 mb-5">
@@ -55,7 +55,7 @@ export function ToolPageWrapper({
             </nav>
           )}
 
-          <h1 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-tighter">
+          <h1 className="text-6xl md:text-5xl font-black text-white leading-tight tracking-tighter">
             {title}
           </h1>
           <p className="text-white/55 mt-3 text-base max-w-xl leading-relaxed">{description}</p>
@@ -64,7 +64,7 @@ export function ToolPageWrapper({
 
       {/* Content */}
       <div className="bg-[var(--cream)] min-h-[60vh]">
-        <div className="max-w-3xl mx-auto px-5 py-10">
+        <div className="max-w-6xl mx-auto px-5 py-10">
           {children}
         </div>
       </div>

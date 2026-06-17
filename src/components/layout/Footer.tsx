@@ -80,7 +80,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs">
-          <p>© {year} HowLongToGo. All rights reserved.</p>
+          <p>© {year} <span className="font-bold text-[var(--coral)]">HowLongToGo</span>. All rights reserved.</p>
           <div className="flex gap-5">
             <Link href="/about"   className="hover:text-white transition-colors">About</Link>
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>

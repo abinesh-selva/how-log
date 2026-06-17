@@ -1,8 +1,11 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
+import Link from "next/link"
 import { buildFAQSchema, buildBreadcrumbSchema, buildEventSchema } from "@/lib/schema/jsonld"
 import { JsonLd } from "@/components/shared/JsonLd"
 import { StatGrid } from "@/components/shared/StatGrid"
+import { EmojiRain } from "@/components/ui/EmojiRain"
+import { VantaFog } from "@/components/ui/VantaFog"
 import { HOLIDAY_DATA, getNextOccurrence } from "./holidayData"
 
 interface Props {
@@ -76,7 +79,10 @@ export default async function HolidayPage({ params }: Props) {
   ]
 
   return (
-    <>
+    <div className="min-h-screen relative overflow-hidden bg-[var(--cream)] pb-20">
+      <VantaFog color={0xf07040} baseColor={0xf8f3ec} opacity={0.6} />
+      <EmojiRain emoji={holiday.emoji} count={30} />
+      
       <JsonLd data={buildFAQSchema(faqs)} />
       <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
       <JsonLd data={buildEventSchema(
@@ -86,9 +92,12 @@ export default async function HolidayPage({ params }: Props) {
         `https://howlongtogo.com/holiday/${country}/${slug}`
       )} />
 
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        <nav className="text-sm text-slate-500 mb-8">
-          Home / Holidays / {holiday.countryName} / <span className="text-slate-900">{holiday.name}</span>
+      <main className="max-w-4xl mx-auto px-4 pt-12 relative z-10">
+        <nav className="text-sm text-slate-500 mb-8 font-medium">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link> /{" "}
+          <Link href="/holiday" className="hover:text-slate-900 transition-colors">Holidays</Link> /{" "}
+          <Link href={`/holiday/${country}`} className="hover:text-slate-900 transition-colors">{holiday.countryName}</Link> /{" "}
+          <span className="text-slate-900">{holiday.name}</span>
         </nav>
 
         <div className="text-4xl mb-3">{holiday.emoji}</div>
@@ -122,6 +131,6 @@ export default async function HolidayPage({ params }: Props) {
           ))}
         </section>
       </main>
-    </>
+    </div>
   )
 }

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { JsonLd } from "@/components/shared/JsonLd"
 import { buildFAQSchema, buildWebApplicationSchema } from "@/lib/schema/jsonld"
 import { Arrow } from "@/components/ui/Arrow"
+import { CountUp } from "@/components/ui/CountUp"
 
 export const revalidate = 3600
 
@@ -111,12 +112,14 @@ export default function Home() {
                 {/* Mini stat strip */}
                 <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-3 gap-6">
                   {[
-                    { num: "1,024", label: "Pages" },
-                    { num: "5",     label: "Free tools" },
-                    { num: "0",     label: "Ads" },
+                    { num: 1024, suffix: "", label: "Pages" },
+                    { num: 5,    suffix: "", label: "Free tools" },
+                    { num: 200,  suffix: "+", label: "Holidays" },
                   ].map((s) => (
                     <div key={s.label}>
-                      <p className="text-2xl font-black text-white tabular-nums">{s.num}</p>
+                      <p className="text-2xl font-black text-white tabular-nums">
+                        <CountUp end={s.num} suffix={s.suffix} duration={1500} />
+                      </p>
                       <p className="text-white/35 text-[10px] font-black uppercase tracking-[0.15em] mt-1">{s.label}</p>
                     </div>
                   ))}
@@ -130,7 +133,7 @@ export default function Home() {
                   style={{ background: "rgba(255,255,255,0.07)" }}>
                   <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Days since Jan 1, 2000</p>
                   <p className="text-8xl font-black text-white tabular-nums leading-none">
-                    {daysSince2000.toLocaleString()}
+                    <CountUp end={daysSince2000} duration={2500} />
                   </p>
                   <p className="text-white/25 text-xs mt-4">Updated hourly · try the calculator below</p>
                   <div className="mt-5 flex justify-center gap-2">
@@ -146,14 +149,18 @@ export default function Home() {
                 {/* Floating badge – Christmas */}
                 <div className="absolute -bottom-2 left-2 bg-[var(--coral)] rounded-2xl px-5 py-4 shadow-2xl shadow-black/30 animate-float">
                   <p className="text-white/70 text-[10px] font-black uppercase tracking-widest">Until Christmas</p>
-                  <p className="text-4xl font-black text-white tabular-nums leading-none mt-1">{daysToXmas}</p>
+                  <p className="text-4xl font-black text-white tabular-nums leading-none mt-1">
+                    <CountUp end={daysToXmas} duration={2000} />
+                  </p>
                   <p className="text-white/50 text-[11px] mt-1">days to go</p>
                 </div>
 
                 {/* Floating badge – New Year */}
                 <div className="absolute -bottom-2 right-2 bg-[var(--green)] rounded-2xl px-5 py-4 shadow-2xl shadow-black/30 animate-float-delayed">
                   <p className="text-white/70 text-[10px] font-black uppercase tracking-widest">Until New Year</p>
-                  <p className="text-4xl font-black text-white tabular-nums leading-none mt-1">{daysToNY}</p>
+                  <p className="text-4xl font-black text-white tabular-nums leading-none mt-1">
+                    <CountUp end={daysToNY} duration={2000} />
+                  </p>
                   <p className="text-white/50 text-[11px] mt-1">days to go</p>
                 </div>
               </div>
@@ -263,13 +270,15 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
               {[
-                { num: "1,024",  label: "Searchable pages" },
-                { num: "5",      label: "Free tools"        },
-                { num: "0",      label: "Ads"               },
-                { num: "0",      label: "Sign-ups needed"   },
+                { num: 1024, suffix: "",  label: "Searchable pages" },
+                { num: 5,    suffix: "",  label: "Free tools"        },
+                { num: 365,  suffix: "",  label: "Days supported"   },
+                { num: 50,   suffix: "+", label: "Countries tracked"   },
               ].map((s) => (
                 <div key={s.label}>
-                  <p className="text-4xl md:text-5xl font-black text-white tabular-nums">{s.num}</p>
+                  <p className="text-4xl md:text-5xl font-black text-white tabular-nums">
+                    <CountUp end={s.num} suffix={s.suffix} duration={2000} />
+                  </p>
                   <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.15em] mt-2">{s.label}</p>
                 </div>
               ))}
@@ -358,7 +367,7 @@ export default function Home() {
 
         {/* ── FAQ ───────────────────────────────────────────────── */}
         <section className="bg-white py-20 px-5">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--coral)] mb-2">FAQ</p>
             <h2 className="text-2xl font-black text-[var(--ink)] mb-8 tracking-tighter">Common questions</h2>
             <div className="space-y-3">

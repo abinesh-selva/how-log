@@ -13,7 +13,7 @@ export default function AboutPage() {
     <main>
       {/* Header strip */}
       <div className="bg-[var(--teal)] py-14 px-5">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <nav className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.15em] text-white/50 mb-4">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>›</span>
@@ -24,7 +24,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-5 py-14 space-y-14">
+      <div className="max-w-6xl mx-auto px-5 py-14 space-y-14">
 
         {/* Mission */}
         <section>

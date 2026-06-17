@@ -3,16 +3,19 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import type { CountdownTheme } from "@/types"
+import { EmojiRain } from "@/components/ui/EmojiRain"
 
-const THEME_GRADIENTS: Record<CountdownTheme, string> = {
-  birthday: "from-pink-500 to-rose-600",
-  wedding: "from-purple-500 to-violet-600",
-  holiday: "from-blue-500 to-cyan-600",
-  graduation: "from-yellow-500 to-amber-600",
-  retirement: "from-teal-500 to-emerald-600",
-  baby: "from-sky-400 to-blue-500",
-  anniversary: "from-red-500 to-pink-600",
-  default: "from-slate-600 to-slate-800",
+import { VantaFog } from "@/components/ui/VantaFog"
+
+const THEME_HEX_COLORS: Record<CountdownTheme, number> = {
+  birthday: 0xec4899,
+  wedding: 0xa855f7,
+  holiday: 0x06b6d4,
+  graduation: 0xf59e0b,
+  retirement: 0x14b8a6,
+  baby: 0x38bdf8,
+  anniversary: 0xf43f5e,
+  default: 0x475569,
 }
 
 const THEME_EMOJIS: Record<CountdownTheme, string> = {
@@ -56,6 +59,7 @@ function calcTimeLeft(targetDate: string): TimeLeft {
 
 export function CountdownDisplay({ title, targetDate, theme }: Props) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null)
+  const [isShared, setIsShared] = useState(false)
 
   useEffect(() => {
     setTimeLeft(calcTimeLeft(targetDate))
@@ -63,23 +67,37 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
     return () => clearInterval(timer)
   }, [targetDate])
 
-  const gradient = THEME_GRADIENTS[theme]
+  const hexColor = THEME_HEX_COLORS[theme]
   const emoji = THEME_EMOJIS[theme]
   const dateFormatted = parseLocalDate(targetDate).toLocaleDateString("en-US", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   })
 
-  function share() {
-    if (navigator.share) {
-      navigator.share({ title: `Countdown to ${title}`, url: window.location.href })
-    } else {
-      navigator.clipboard.writeText(window.location.href)
+  async function share() {
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `Countdown to ${title}`, url: window.location.href })
+      } else {
+        throw new Error("Web Share not supported")
+      }
+    } catch (err: any) {
+      if (err.name !== "AbortError") {
+        try {
+          await navigator.clipboard.writeText(window.location.href)
+          setIsShared(true)
+          setTimeout(() => setIsShared(false), 2000)
+        } catch (clipboardErr) {
+          console.error("Failed to copy to clipboard", clipboardErr)
+        }
+      }
     }
   }
 
   return (
-    <div className={`min-h-[calc(100vh-8rem)] flex items-center justify-center bg-gradient-to-br ${gradient} px-4 py-12`}>
-      <div className="text-white text-center max-w-xl w-full">
+    <div className="min-h-[calc(100vh-8rem)] relative overflow-hidden flex items-center justify-center bg-slate-900 px-4 py-12">
+      <VantaFog color={hexColor} baseColor={0x0f172a} opacity={1} />
+      <EmojiRain emoji={emoji} count={30} />
+      <div className="text-white text-center max-w-xl w-full relative z-10">
         <p className="text-white/70 text-sm font-medium uppercase tracking-widest mb-2">Counting down to</p>
         <h1 className="text-3xl md:text-4xl font-bold mb-1">
           {emoji} {title}
@@ -119,9 +137,9 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={share}
-            className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors backdrop-blur"
+            className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors backdrop-blur min-w-[160px]"
           >
-            Share Countdown
+            {isShared ? "Copied Link!" : "Share Countdown"}
           </button>
           <Link
             href="/countdown/create"
