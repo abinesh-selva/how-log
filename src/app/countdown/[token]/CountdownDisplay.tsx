@@ -60,6 +60,7 @@ function calcTimeLeft(targetDate: string): TimeLeft {
 export function CountdownDisplay({ title, targetDate, theme }: Props) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null)
   const [isShared, setIsShared] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
 
   useEffect(() => {
     setTimeLeft(calcTimeLeft(targetDate))
@@ -90,6 +91,48 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
           console.error("Failed to copy to clipboard", clipboardErr)
         }
       }
+    }
+  }
+
+  async function recordStoryVideo() {
+    try {
+      setIsRecording(true)
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: { displaySurface: "browser" },
+        audio: false,
+        preferCurrentTab: true
+      } as any)
+
+      // Determine best format (Safari supports mp4, Chrome supports webm)
+      const mimeType = MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : 'video/webm'
+      const recorder = new MediaRecorder(stream, { mimeType })
+      const chunks: BlobPart[] = []
+
+      recorder.ondataavailable = (e) => chunks.push(e.data)
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: mimeType })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `countdown-story.${mimeType === 'video/mp4' ? 'mp4' : 'webm'}`
+        a.click()
+        URL.revokeObjectURL(url)
+        stream.getTracks().forEach(t => t.stop())
+        setIsRecording(false)
+      }
+
+      recorder.start()
+      // Stop automatically after 5 seconds
+      setTimeout(() => {
+        if (recorder.state === "recording") {
+          recorder.stop()
+        }
+      }, 5000)
+
+    } catch (err) {
+      console.error(err)
+      setIsRecording(false)
+      alert("Could not start recording. Please ensure you granted permission to capture the current tab.")
     }
   }
 
@@ -139,7 +182,18 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
             onClick={share}
             className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors backdrop-blur min-w-[160px]"
           >
-            {isShared ? "Copied Link!" : "Share Countdown"}
+            {isShared ? "Copied Link!" : "Share Link"}
+          </button>
+          <button
+            onClick={recordStoryVideo}
+            disabled={isRecording}
+            className="px-6 py-3 bg-[var(--coral)] hover:bg-[var(--coral-dark)] text-white rounded-xl text-sm font-bold transition-colors min-w-[160px] disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {isRecording ? (
+              <>
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" /> Recording 5s...
+              </>
+            ) : "Save 5s Story Video"}
           </button>
           <Link
             href="/countdown/create"
