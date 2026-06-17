@@ -53,7 +53,7 @@ export default function AgePage() {
       <ToolPageWrapper
         title="Age Calculator"
         description="Find out your exact age in years, months, weeks, and days — plus fascinating life statistics."
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Tools", href: "/tools" }, { label: "Age Calculator" }]}
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Tools" }, { label: "Age Calculator" }]}
       >
         <AgeCalculatorClient />
         <FAQSection faqs={FAQS} />

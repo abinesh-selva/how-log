@@ -79,7 +79,7 @@ export default async function AgeProgrammaticPage({ params }: Props) {
       <JsonLd data={buildFAQSchema(faqs)} />
       <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
 
-      <main className="max-w-3xl mx-auto px-4 py-12">
+      <main className="max-w-6xl mx-auto px-4 py-12">
         <nav className="text-sm text-slate-500 mb-8">
           Home / <a href="/tools/age" className="hover:text-blue-600">Age Calculator</a> /{" "}
           <span className="text-slate-900">{dateLabel}</span>

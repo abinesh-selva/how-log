@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Select } from "@/components/ui/Select"
@@ -35,9 +35,14 @@ interface CountdownPreview {
   seconds: number
 }
 
+// Append T00:00:00 so the browser treats the date as local midnight, not UTC midnight
+function parseLocalDate(dateStr: string) {
+  return new Date(dateStr + "T00:00:00")
+}
+
 function getCountdown(targetDate: string): CountdownPreview | null {
   if (!targetDate) return null
-  const diff = new Date(targetDate).getTime() - Date.now()
+  const diff = parseLocalDate(targetDate).getTime() - Date.now()
   if (diff <= 0) return null
   const days = Math.floor(diff / 86400000)
   const hours = Math.floor((diff % 86400000) / 3600000)
@@ -53,8 +58,17 @@ export function CountdownCreatorClient() {
   const [shareUrl, setShareUrl] = useState<string | null>(null)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [copied, setCopied] = useState(false)
 
-  const preview = getCountdown(targetDate)
+  const [preview, setPreview] = useState<CountdownPreview | null>(() => getCountdown(targetDate))
+
+  useEffect(() => {
+    setPreview(getCountdown(targetDate))
+    if (!targetDate) return
+    const id = setInterval(() => setPreview(getCountdown(targetDate)), 1000)
+    return () => clearInterval(id)
+  }, [targetDate])
+
   const selectedTheme = THEMES.find((t) => t.value === theme)!
   const gradientClass = THEME_COLORS[theme]
   const minDate = new Date().toISOString().split("T")[0]
@@ -63,7 +77,7 @@ export function CountdownCreatorClient() {
     setError("")
     if (!title.trim()) { setError("Please enter a title for your countdown."); return }
     if (!targetDate) { setError("Please select a target date."); return }
-    if (new Date(targetDate) <= new Date()) { setError("Target date must be in the future."); return }
+    if (parseLocalDate(targetDate) <= new Date()) { setError("Target date must be in the future."); return }
 
     setLoading(true)
     try {
@@ -83,7 +97,11 @@ export function CountdownCreatorClient() {
   }
 
   function copyUrl() {
-    if (shareUrl) navigator.clipboard.writeText(shareUrl)
+    if (!shareUrl) return
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }).catch(() => {})
   }
 
   return (
@@ -118,8 +136,8 @@ export function CountdownCreatorClient() {
                 onClick={() => setTheme(t.value)}
                 className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
                   theme === t.value
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
-                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+                    ? "border-[var(--teal)] bg-[var(--teal)]/8 text-[var(--teal)]"
+                    : "border-[#E0DAD1] text-[var(--ink-muted)] hover:border-[var(--coral)] hover:text-[var(--coral)]"
                 }`}
               >
                 <span>{t.emoji}</span>
@@ -161,19 +179,32 @@ export function CountdownCreatorClient() {
 
       {/* Share URL */}
       {shareUrl && (
-        <div className="bg-green-50 border border-green-200 rounded-2xl p-6">
-          <p className="text-green-800 font-semibold mb-3">Your countdown is ready!</p>
-          <div className="flex gap-2">
+        <div className="bg-[var(--teal)] rounded-2xl p-6">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">🎉</span>
+            <p className="text-white font-black text-base">Your countdown is live!</p>
+          </div>
+          <div className="flex gap-2 mb-3">
             <input
               readOnly
               value={shareUrl}
-              className="flex-1 px-3 py-2 rounded-lg border border-green-300 bg-white text-sm text-slate-700 font-mono"
+              className="flex-1 px-3 py-2 rounded-xl border border-white/20 bg-white/10 text-sm text-white font-mono placeholder-white/40 focus:outline-none"
             />
-            <Button onClick={copyUrl} variant="teal" size="sm">
-              Copy
+            <Button onClick={copyUrl} variant="teal" size="sm" className="bg-white !text-[var(--teal)] hover:bg-[var(--cream)] shrink-0 min-w-[72px]">
+              {copied ? "Copied!" : "Copy"}
             </Button>
           </div>
-          <p className="text-green-700 text-xs mt-2">Share this link with anyone — it works on any device.</p>
+          <div className="flex gap-3">
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 text-center py-2.5 bg-[var(--coral)] hover:bg-[var(--coral-dark)] text-white text-sm font-black rounded-xl transition-colors"
+            >
+              View Countdown
+            </a>
+          </div>
+          <p className="text-white/60 text-xs mt-3">Share this link with anyone — works on any device, free forever.</p>
         </div>
       )}
     </div>

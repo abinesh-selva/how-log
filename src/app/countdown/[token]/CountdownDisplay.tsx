@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import type { CountdownTheme } from "@/types"
 
 const THEME_GRADIENTS: Record<CountdownTheme, string> = {
@@ -34,8 +35,15 @@ interface TimeLeft {
   isExpired: boolean
 }
 
+function parseLocalDate(dateStr: string) {
+  // Treat DATE strings as local midnight, not UTC midnight
+  return /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+    ? new Date(dateStr + "T00:00:00")
+    : new Date(dateStr)
+}
+
 function calcTimeLeft(targetDate: string): TimeLeft {
-  const diff = new Date(targetDate).getTime() - Date.now()
+  const diff = parseLocalDate(targetDate).getTime() - Date.now()
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true }
   return {
     days: Math.floor(diff / 86400000),
@@ -47,16 +55,17 @@ function calcTimeLeft(targetDate: string): TimeLeft {
 }
 
 export function CountdownDisplay({ title, targetDate, theme }: Props) {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calcTimeLeft(targetDate))
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null)
 
   useEffect(() => {
+    setTimeLeft(calcTimeLeft(targetDate))
     const timer = setInterval(() => setTimeLeft(calcTimeLeft(targetDate)), 1000)
     return () => clearInterval(timer)
   }, [targetDate])
 
   const gradient = THEME_GRADIENTS[theme]
   const emoji = THEME_EMOJIS[theme]
-  const dateFormatted = new Date(targetDate).toLocaleDateString("en-US", {
+  const dateFormatted = parseLocalDate(targetDate).toLocaleDateString("en-US", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   })
 
@@ -77,13 +86,23 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
         </h1>
         <p className="text-white/60 text-sm mb-10">{dateFormatted}</p>
 
-        {timeLeft.isExpired ? (
-          <div className="text-5xl font-bold animate-pulse">🎉 It's here!</div>
+        {timeLeft === null ? (
+          /* Loading skeleton — shown only before first client tick */
+          <div className="grid grid-cols-4 gap-3 md:gap-5 mb-10">
+            {["Days", "Hours", "Minutes", "Seconds"].map((label) => (
+              <div key={label} className="bg-white/20 backdrop-blur rounded-2xl py-5 md:py-7">
+                <div className="text-4xl md:text-5xl font-bold tabular-nums leading-none opacity-30">--</div>
+                <div className="text-xs md:text-sm text-white/70 mt-2 uppercase tracking-wide">{label}</div>
+              </div>
+            ))}
+          </div>
+        ) : timeLeft.isExpired ? (
+          <div className="text-5xl font-bold animate-pulse mb-10">🎉 It&apos;s here!</div>
         ) : (
           <div className="grid grid-cols-4 gap-3 md:gap-5 mb-10">
             {[
-              { label: "Days", value: timeLeft.days },
-              { label: "Hours", value: timeLeft.hours },
+              { label: "Days",    value: timeLeft.days    },
+              { label: "Hours",   value: timeLeft.hours   },
               { label: "Minutes", value: timeLeft.minutes },
               { label: "Seconds", value: timeLeft.seconds },
             ].map(({ label, value }) => (
@@ -104,12 +123,12 @@ export function CountdownDisplay({ title, targetDate, theme }: Props) {
           >
             Share Countdown
           </button>
-          <a
+          <Link
             href="/countdown/create"
             className="px-6 py-3 bg-white text-slate-900 hover:bg-white/90 rounded-xl text-sm font-medium transition-colors"
           >
             Create Your Own
-          </a>
+          </Link>
         </div>
       </div>
     </div>

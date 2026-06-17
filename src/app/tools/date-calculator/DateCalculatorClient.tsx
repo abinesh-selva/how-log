@@ -29,7 +29,7 @@ export function DateCalculatorClient() {
   const [amount, setAmount]   = useState(30)
   const [unit, setUnit]       = useState<Unit>("days")
   const [mode, setMode]       = useState<Mode>("add")
-  const [result, setResult]   = useState<{ date: Date; formatted: string } | null>(null)
+  const [result, setResult]   = useState<{ date: Date; formatted: string; startLabel: string; amount: number; unit: Unit; mode: Mode } | null>(null)
   const [error,  setError]    = useState("")
 
   function calculate() {
@@ -46,7 +46,7 @@ export function DateCalculatorClient() {
     if (unit === "months") out.setMonth(out.getMonth() + sign * amount)
     if (unit === "years")  out.setFullYear(out.getFullYear() + sign * amount)
 
-    setResult({ date: out, formatted: fmt(out) })
+    setResult({ date: out, formatted: fmt(out), startLabel: fmt(base), amount, unit, mode })
   }
 
   return (
@@ -113,13 +113,9 @@ export function DateCalculatorClient() {
       </div>
 
       {result && (
-        <ResultCard variant={mode === "add" ? "teal" : "coral"}>
+        <ResultCard variant={result.mode === "add" ? "teal" : "coral"}>
           <p className="text-white/60 text-sm text-center mb-3">
-            {mode === "add" ? "Adding" : "Subtracting"} {amount} {unit}
-            {" "}{mode === "add" ? "to" : "from"}{" "}
-            {MONTH_NAMES[parseDateFields(startDate)!.getMonth()]}{" "}
-            {parseDateFields(startDate)!.getDate()},{" "}
-            {parseDateFields(startDate)!.getFullYear()}
+            {result.mode === "add" ? "Adding" : "Subtracting"} {result.amount} {result.unit} {result.mode === "add" ? "to" : "from"} {result.startLabel}
           </p>
           <p className="text-center text-2xl md:text-3xl font-bold text-white">{result.formatted}</p>
         </ResultCard>

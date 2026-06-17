@@ -1,39 +1,22 @@
 -- HowLongToGo Database Schema
 -- Run this against your Neon PostgreSQL instance
 
-CREATE TABLE IF NOT EXISTS countdowns (
-  id           BIGSERIAL PRIMARY KEY,
-  title        VARCHAR(100)  NOT NULL,
-  target_date  DATE          NOT NULL,
-  timezone     VARCHAR(64)   NOT NULL DEFAULT 'UTC',
-  theme        VARCHAR(20)   NOT NULL DEFAULT 'default',
-  share_token  CHAR(16)      NOT NULL UNIQUE,
-  user_id      BIGINT        REFERENCES users(id) ON DELETE SET NULL,
-  is_recurring BOOLEAN       NOT NULL DEFAULT FALSE,
-  created_at   TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
-  updated_at   TIMESTAMPTZ   NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_countdowns_share_token ON countdowns (share_token);
-CREATE INDEX IF NOT EXISTS idx_countdowns_user_id     ON countdowns (user_id);
-CREATE INDEX IF NOT EXISTS idx_countdowns_target_date ON countdowns (target_date);
-
--- Users table (for saved countdowns, reminders)
+-- Users table (must come before countdowns due to FK)
 CREATE TABLE IF NOT EXISTS users (
-  id            BIGSERIAL PRIMARY KEY,
-  email         VARCHAR(255) NOT NULL UNIQUE,
-  name          VARCHAR(100),
-  image         TEXT,
+  id             BIGSERIAL PRIMARY KEY,
+  email          VARCHAR(255) NOT NULL UNIQUE,
+  name           VARCHAR(100),
+  image          TEXT,
   email_verified TIMESTAMPTZ,
-  created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- NextAuth.js v5 required tables
 CREATE TABLE IF NOT EXISTS accounts (
   id                  BIGSERIAL PRIMARY KEY,
   user_id             BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  type                VARCHAR(50) NOT NULL,
-  provider            VARCHAR(50) NOT NULL,
+  type                VARCHAR(50)  NOT NULL,
+  provider            VARCHAR(50)  NOT NULL,
   provider_account_id VARCHAR(255) NOT NULL,
   refresh_token       TEXT,
   access_token        TEXT,
@@ -59,13 +42,31 @@ CREATE TABLE IF NOT EXISTS verification_tokens (
   PRIMARY KEY (identifier, token)
 );
 
--- Email reminders for countdown events
+-- Countdowns
+CREATE TABLE IF NOT EXISTS countdowns (
+  id           BIGSERIAL PRIMARY KEY,
+  title        VARCHAR(100) NOT NULL,
+  target_date  DATE         NOT NULL,
+  timezone     VARCHAR(64)  NOT NULL DEFAULT 'UTC',
+  theme        VARCHAR(20)  NOT NULL DEFAULT 'default',
+  share_token  CHAR(16)     NOT NULL UNIQUE,
+  user_id      BIGINT       REFERENCES users(id) ON DELETE SET NULL,
+  is_recurring BOOLEAN      NOT NULL DEFAULT FALSE,
+  created_at   TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  updated_at   TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_countdowns_share_token ON countdowns (share_token);
+CREATE INDEX IF NOT EXISTS idx_countdowns_user_id     ON countdowns (user_id);
+CREATE INDEX IF NOT EXISTS idx_countdowns_target_date ON countdowns (target_date);
+
+-- Email reminders
 CREATE TABLE IF NOT EXISTS reminders (
   id           BIGSERIAL PRIMARY KEY,
   countdown_id BIGINT NOT NULL REFERENCES countdowns(id) ON DELETE CASCADE,
   user_id      BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   email        VARCHAR(255) NOT NULL,
-  days_before  INT NOT NULL,           -- e.g. 7, 1
+  days_before  INT  NOT NULL,
   sent_at      TIMESTAMPTZ,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

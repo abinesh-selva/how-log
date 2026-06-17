@@ -1,16 +1,25 @@
 import { NextResponse } from "next/server"
 import { randomBytes } from "crypto"
 
+const VALID_THEMES = new Set(["birthday", "wedding", "holiday", "graduation", "retirement", "baby", "anniversary", "default"])
+
+function parseLocalDate(dateStr: string) {
+  return new Date(dateStr + "T00:00:00")
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
     const { title, targetDate, theme } = body
 
-    if (!title || !targetDate || !theme) {
+    if (!title?.trim() || !targetDate || !theme) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
+    if (!VALID_THEMES.has(theme)) {
+      return NextResponse.json({ error: "Invalid theme" }, { status: 400 })
+    }
 
-    const target = new Date(targetDate)
+    const target = parseLocalDate(targetDate)
     if (isNaN(target.getTime()) || target <= new Date()) {
       return NextResponse.json({ error: "Target date must be a valid future date" }, { status: 400 })
     }

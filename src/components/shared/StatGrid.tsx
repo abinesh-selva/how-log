@@ -49,7 +49,7 @@ export function StatGrid({ stats, cols = 4, inverted = false }: StatGridProps) {
           )}
         >
           <div className={cn(
-            "text-3xl font-bold tabular-nums leading-none",
+            "text-2xl font-bold tabular-nums leading-none",
             inverted ? "text-white" : (!accent && i !== 0 ? "text-[var(--teal)]" : "")
           )}>
             {typeof value === "number" ? value.toLocaleString() : value}

@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 interface Breadcrumb {
   label: string
   href?: string
@@ -11,10 +13,10 @@ interface ToolPageWrapperProps {
   accentColor?: "coral" | "teal" | "green"
 }
 
-const ACCENT_BG = {
-  coral: "bg-[var(--coral)]",
-  teal:  "bg-[var(--teal)]",
-  green: "bg-[var(--green)]",
+const ACCENT = {
+  coral: { bg: "bg-[var(--coral)]",  ring: "bg-[var(--coral-dark)]" },
+  teal:  { bg: "bg-[var(--teal)]",   ring: "bg-[var(--teal-mid)]"   },
+  green: { bg: "bg-[var(--green)]",  ring: "bg-[var(--green)]"      },
 }
 
 export function ToolPageWrapper({
@@ -24,33 +26,47 @@ export function ToolPageWrapper({
   children,
   accentColor = "coral",
 }: ToolPageWrapperProps) {
+  const { bg } = ACCENT[accentColor]
+
   return (
     <main>
-      {/* Page header strip */}
-      <div className={`${ACCENT_BG[accentColor]} py-10 px-4`}>
-        <div className="max-w-3xl mx-auto">
+      {/* Page header */}
+      <div className={`${bg} relative overflow-hidden py-16 px-5`}>
+        {/* Decorative circles */}
+        <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-white opacity-[0.06]" />
+        <div className="absolute right-24 bottom-0 w-32 h-32 rounded-full bg-white opacity-[0.04]" />
+
+        <div className="relative max-w-3xl mx-auto">
+          {/* Breadcrumb */}
           {breadcrumbs && (
-            <nav className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-white/60 mb-4">
+            <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/40 mb-5">
               {breadcrumbs.map((crumb, i) => (
-                <span key={crumb.label} className="flex items-center gap-1.5">
-                  {i > 0 && <span>›</span>}
+                <span key={crumb.label} className="flex items-center gap-2">
+                  {i > 0 && <span className="text-white/20">›</span>}
                   {crumb.href ? (
-                    <a href={crumb.href} className="hover:text-white transition-colors">{crumb.label}</a>
+                    <Link href={crumb.href} className="hover:text-white/70 transition-colors">
+                      {crumb.label}
+                    </Link>
                   ) : (
-                    <span className="text-white">{crumb.label}</span>
+                    <span className="text-white/70">{crumb.label}</span>
                   )}
                 </span>
               ))}
             </nav>
           )}
-          <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">{title}</h1>
-          <p className="text-white/70 mt-2 text-base max-w-xl">{description}</p>
+
+          <h1 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-tighter">
+            {title}
+          </h1>
+          <p className="text-white/55 mt-3 text-base max-w-xl leading-relaxed">{description}</p>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-3xl mx-auto px-4 py-10">
-        {children}
+      <div className="bg-[var(--cream)] min-h-[60vh]">
+        <div className="max-w-3xl mx-auto px-5 py-10">
+          {children}
+        </div>
       </div>
     </main>
   )

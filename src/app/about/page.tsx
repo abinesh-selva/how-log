@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { Arrow } from "@/components/ui/Arrow"
 
 export const metadata: Metadata = {
   title: "About — HowLongToGo",
@@ -120,7 +121,7 @@ export default function AboutPage() {
             href="mailto:hello@howlongtogo.app"
             className="inline-block px-6 py-3 bg-[var(--coral)] hover:bg-[var(--coral-dark)] text-white font-bold text-sm rounded-2xl transition-colors"
           >
-            Send a message →
+            <span className="flex items-center gap-2">Send a message <Arrow size={13} /></span>
           </a>
         </section>
 

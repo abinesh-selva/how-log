@@ -26,6 +26,15 @@ export const FIXED_HOLIDAYS = [
   // France
   { name: "Bastille Day", month: 7, day: 14, countryCode: "FR" },
   { name: "Christmas Day", month: 12, day: 25, countryCode: "FR" },
+  // India
+  { name: "Republic Day", month: 1, day: 26, countryCode: "IN" },
+  { name: "Independence Day", month: 8, day: 15, countryCode: "IN" },
+  { name: "Gandhi Jayanti", month: 10, day: 2, countryCode: "IN" },
+  // Ireland
+  { name: "St. Patrick's Day", month: 3, day: 17, countryCode: "IE" },
+  // Mexico
+  { name: "Cinco de Mayo", month: 5, day: 5, countryCode: "MX" },
+  { name: "Day of the Dead", month: 11, day: 2, countryCode: "MX" },
 ] as const
 
 export function getHolidaysForYear(countryCode: string, year: number) {

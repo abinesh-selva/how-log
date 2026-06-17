@@ -47,8 +47,10 @@ export default async function HolidayPage({ params }: Props) {
   const weeksUntil = Math.floor(daysUntil / 7)
   const nextFormatted = next.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
 
-  const past = new Date(next)
-  past.setFullYear(past.getFullYear() - 1)
+  const pastYear = next.getFullYear() - 1
+  const past = holiday.getDate 
+    ? holiday.getDate(pastYear) 
+    : new Date(pastYear, holiday.month - 1, holiday.day!)
   const pastFormatted = past.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
 
   const faqs = [
@@ -84,7 +86,7 @@ export default async function HolidayPage({ params }: Props) {
         `https://howlongtogo.com/holiday/${country}/${slug}`
       )} />
 
-      <main className="max-w-3xl mx-auto px-4 py-12">
+      <main className="max-w-6xl mx-auto px-4 py-12">
         <nav className="text-sm text-slate-500 mb-8">
           Home / Holidays / {holiday.countryName} / <span className="text-slate-900">{holiday.name}</span>
         </nav>

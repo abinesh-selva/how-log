@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { Arrow } from "@/components/ui/Arrow"
 
 export const metadata: Metadata = {
   title: "Privacy Policy — HowLongToGo",
@@ -135,11 +136,11 @@ export default function PrivacyPage() {
         </Section>
 
         <div className="flex gap-4 pt-4 border-t border-[#E8E3DC]">
-          <Link href="/terms" className="text-sm font-semibold text-[var(--coral)] hover:underline">
-            Terms of Service →
+          <Link href="/terms" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--coral)] hover:underline">
+            Terms of Service <Arrow size={12} />
           </Link>
-          <Link href="/about" className="text-sm font-semibold text-[var(--ink-muted)] hover:text-[var(--ink)] hover:underline">
-            About us →
+          <Link href="/about" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--ink-muted)] hover:text-[var(--ink)] hover:underline">
+            About us <Arrow size={12} />
           </Link>
         </div>
 

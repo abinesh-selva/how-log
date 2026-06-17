@@ -129,6 +129,113 @@ export const HOLIDAY_DATA: Record<string, HolidayDef[]> = {
       day: 1,
     },
   ],
+  IN: [
+    {
+      slug: "diwali",
+      name: "Diwali",
+      emoji: "🪔",
+      countryName: "India",
+      description: "Diwali is the Hindu festival of lights, symbolizing the spiritual victory of light over darkness, good over evil, and knowledge over ignorance.",
+      month: 11, // approx, used for generic sorting if needed
+      day: null,
+      getDate: (year) => {
+        const dates: Record<number, string> = { 2024: "10-31", 2025: "10-20", 2026: "11-08", 2027: "10-29", 2028: "10-17", 2029: "11-05", 2030: "10-26" };
+        const d = dates[year] || "11-01"; // Fallback
+        const [m, day] = d.split("-").map(Number);
+        return new Date(year, m - 1, day);
+      },
+    },
+    {
+      slug: "holi",
+      name: "Holi",
+      emoji: "🎨",
+      countryName: "India",
+      description: "Holi is a popular ancient Hindu festival, also known as the Festival of Spring, the Festival of Colours, or the Festival of Love.",
+      month: 3,
+      day: null,
+      getDate: (year) => {
+        const dates: Record<number, string> = { 2024: "03-25", 2025: "03-14", 2026: "03-03", 2027: "03-22", 2028: "03-11", 2029: "02-28", 2030: "03-19" };
+        const d = dates[year] || "03-15"; // Fallback
+        const [m, day] = d.split("-").map(Number);
+        return new Date(year, m - 1, day);
+      },
+    },
+    {
+      slug: "republic-day",
+      name: "Republic Day",
+      emoji: "🇮🇳",
+      countryName: "India",
+      description: "Republic Day honors the date on which the Constitution of India came into effect on 26 January 1950, replacing the Government of India Act as the governing document of India.",
+      month: 1,
+      day: 26,
+    },
+    {
+      slug: "independence-day",
+      name: "Independence Day",
+      emoji: "🇮🇳",
+      countryName: "India",
+      description: "Independence Day is celebrated annually on 15 August as a public holiday in India commemorating the nation's independence from the United Kingdom on 15 August 1947.",
+      month: 8,
+      day: 15,
+    },
+    {
+      slug: "gandhi-jayanti",
+      name: "Gandhi Jayanti",
+      emoji: "🕊️",
+      countryName: "India",
+      description: "Gandhi Jayanti is an event celebrated in India to mark the birthday of Mahatma Gandhi. It is celebrated annually on 2 October, and it is one of the three national holidays of India.",
+      month: 10,
+      day: 2,
+    },
+  ],
+  CN: [
+    {
+      slug: "lunar-new-year",
+      name: "Lunar New Year",
+      emoji: "🐉",
+      countryName: "China",
+      description: "Lunar New Year is the festival that celebrates the beginning of a new year on the traditional lunisolar Chinese calendar. It is traditionally a time to honor deities and ancestors.",
+      month: 2, // approx
+      day: null,
+      getDate: (year) => {
+        const dates: Record<number, string> = { 2024: "02-10", 2025: "01-29", 2026: "02-17", 2027: "02-06", 2028: "01-26", 2029: "02-13", 2030: "02-03" };
+        const d = dates[year] || "02-01"; // Fallback
+        const [m, day] = d.split("-").map(Number);
+        return new Date(year, m - 1, day);
+      },
+    },
+  ],
+  IE: [
+    {
+      slug: "st-patricks-day",
+      name: "St. Patrick's Day",
+      emoji: "☘️",
+      countryName: "Ireland",
+      description: "St. Patrick's Day is a cultural and religious celebration held on 17 March, the traditional death date of Saint Patrick, the foremost patron saint of Ireland.",
+      month: 3,
+      day: 17,
+    },
+  ],
+  MX: [
+    {
+      slug: "day-of-the-dead",
+      name: "Day of the Dead",
+      emoji: "💀",
+      countryName: "Mexico",
+      description: "Day of the Dead (Día de los Muertos) is a Mexican holiday where families welcome back the souls of their deceased relatives for a brief reunion that includes food, drink and celebration.",
+      month: 11,
+      day: 2,
+    },
+    {
+      slug: "cinco-de-mayo",
+      name: "Cinco de Mayo",
+      emoji: "🎉",
+      countryName: "Mexico",
+      description: "Cinco de Mayo is a yearly celebration held on May 5, which commemorates the anniversary of Mexico's victory over the French Empire at the Battle of Puebla in 1862.",
+      month: 5,
+      day: 5,
+    },
+  ],
 }
 
 export function getNextOccurrence(holiday: HolidayDef): Date {
