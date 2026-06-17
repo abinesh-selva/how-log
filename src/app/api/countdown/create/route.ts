@@ -28,9 +28,13 @@ export async function POST(req: Request) {
     const safeTitle = title.trim().slice(0, 100)
 
     const { sql } = await import("@/lib/db")
+    const { auth } = await import("@/auth")
+    const session = await auth()
+    const userEmail = session?.user?.email || null
+
     await sql`
-      INSERT INTO countdowns (title, target_date, theme, share_token, created_at)
-      VALUES (${safeTitle}, ${targetDate}, ${theme}, ${token}, NOW())
+      INSERT INTO countdowns (title, target_date, theme, share_token, user_email, created_at)
+      VALUES (${safeTitle}, ${targetDate}, ${theme}, ${token}, ${userEmail}, NOW())
     `
 
     return NextResponse.json({ token })

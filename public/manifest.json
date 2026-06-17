@@ -1,0 +1,16 @@
+{
+  "name": "HowLongToGo",
+  "short_name": "HowLongToGo",
+  "description": "Calculate dates, track milestones, and count down to important events.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F5F0",
+  "theme_color": "#FF6B6B",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

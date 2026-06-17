@@ -118,7 +118,7 @@ export default function Home() {
                   ].map((s) => (
                     <div key={s.label}>
                       <p className="text-2xl font-black text-white tabular-nums">
-                        <CountUp end={s.num} suffix={s.suffix} duration={1500} />
+                        {s.num.toLocaleString()}{s.suffix}
                       </p>
                       <p className="text-white/35 text-[10px] font-black uppercase tracking-[0.15em] mt-1">{s.label}</p>
                     </div>
@@ -133,7 +133,7 @@ export default function Home() {
                   style={{ background: "rgba(255,255,255,0.07)" }}>
                   <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Days since Jan 1, 2000</p>
                   <p className="text-8xl font-black text-white tabular-nums leading-none">
-                    <CountUp end={daysSince2000} duration={2500} />
+                    {daysSince2000.toLocaleString()}
                   </p>
                   <p className="text-white/25 text-xs mt-4">Updated hourly · try the calculator below</p>
                   <div className="mt-5 flex justify-center gap-2">
@@ -150,7 +150,7 @@ export default function Home() {
                 <div className="absolute -bottom-2 left-2 bg-[var(--coral)] rounded-2xl px-5 py-4 shadow-2xl shadow-black/30 animate-float">
                   <p className="text-white/70 text-[10px] font-black uppercase tracking-widest">Until Christmas</p>
                   <p className="text-4xl font-black text-white tabular-nums leading-none mt-1">
-                    <CountUp end={daysToXmas} duration={2000} />
+                    {daysToXmas.toLocaleString()}
                   </p>
                   <p className="text-white/50 text-[11px] mt-1">days to go</p>
                 </div>
@@ -159,7 +159,7 @@ export default function Home() {
                 <div className="absolute -bottom-2 right-2 bg-[var(--green)] rounded-2xl px-5 py-4 shadow-2xl shadow-black/30 animate-float-delayed">
                   <p className="text-white/70 text-[10px] font-black uppercase tracking-widest">Until New Year</p>
                   <p className="text-4xl font-black text-white tabular-nums leading-none mt-1">
-                    <CountUp end={daysToNY} duration={2000} />
+                    {daysToNY.toLocaleString()}
                   </p>
                   <p className="text-white/50 text-[11px] mt-1">days to go</p>
                 </div>
@@ -277,7 +277,7 @@ export default function Home() {
               ].map((s) => (
                 <div key={s.label}>
                   <p className="text-4xl md:text-5xl font-black text-white tabular-nums">
-                    <CountUp end={s.num} suffix={s.suffix} duration={2000} />
+                    {s.num.toLocaleString()}{s.suffix}
                   </p>
                   <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.15em] mt-2">{s.label}</p>
                 </div>

@@ -77,4 +77,31 @@ export function buildWebApplicationSchema(name: string, description: string) {
   }
 }
 
+export function buildArticleSchema({
+  headline,
+  description,
+  datePublished,
+  authorName,
+  authorUrl,
+}: {
+  headline: string
+  description: string
+  datePublished: string
+  authorName: string
+  authorUrl: string
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline,
+    description,
+    datePublished,
+    author: {
+      "@type": "Organization",
+      name: authorName,
+      url: authorUrl,
+    },
+  }
+}
+
 // JsonLd React component lives in src/components/shared/JsonLd.tsx

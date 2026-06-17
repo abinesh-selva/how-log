@@ -29,7 +29,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable} data-scroll-behavior="smooth">
-      <body className="min-h-screen bg-white font-sans antialiased flex flex-col">
+      <head>
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <script defer data-domain="howlongtogo.com" src="https://plausible.io/js/script.js"></script>
+      </head>
+      <body className="min-h-screen bg-white font-sans antialiased flex flex-col overflow-x-hidden">
         <Header />
         <div className="flex-1">{children}</div>
         <Footer />
